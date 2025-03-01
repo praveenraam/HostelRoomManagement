@@ -10,8 +10,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-google-signin/google-signin": "^13.2.0",
+    "nativewind": "^4.1.23",
     "react": "19.0.0",
-    "react-native": "0.78.0"
+    "react-native": "0.78.0",
+    "react-native-reanimated": "^3.17.1",
+    "react-native-wind": "^1.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
