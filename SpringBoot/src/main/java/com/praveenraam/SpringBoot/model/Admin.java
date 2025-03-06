@@ -5,14 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 @Entity
-@Table(name = "students")
-public class Student {
+@Table(name = "admins")
+public class Admin {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
-    @NotBlank
-    private String name;
+    private Long id;
 
     @NotBlank
     @Column(unique = true)
@@ -28,14 +26,6 @@ public class Student {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getEmail() {
