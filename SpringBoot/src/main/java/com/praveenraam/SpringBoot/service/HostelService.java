@@ -2,14 +2,15 @@ package com.praveenraam.SpringBoot.service;
 
 import com.praveenraam.SpringBoot.model.Hostel;
 import com.praveenraam.SpringBoot.repository.HostelRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class HostelService {
-
-    public HostelRepository hostelRepository;
+    @Autowired
+    private HostelRepository hostelRepository;
 
     public void occupiedRoomInHostel(Long hostelId, int bedCount){
         Optional<Hostel> hostel = hostelRepository.findById(hostelId);
