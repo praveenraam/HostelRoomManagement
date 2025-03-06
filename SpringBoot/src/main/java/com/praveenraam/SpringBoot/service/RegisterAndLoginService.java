@@ -45,7 +45,7 @@ public class RegisterAndLoginService {
         if(email.equals("admin@bitsathy.ac.in")) {
             Admin ad = createAdmin(email,password);
             adminRepository.save(ad);
-            return admin;
+            return Optional.of(ad);
         }
         return Optional.empty();
     }
