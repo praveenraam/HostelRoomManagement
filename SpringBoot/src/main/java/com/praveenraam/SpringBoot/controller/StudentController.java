@@ -21,9 +21,14 @@ public class StudentController {
         return studentService.findAllStudents();
     }
 
-    @PostMapping("/register")
+    @PostMapping("/studentRegister")
     public Student registerStudent(@RequestBody Student student){
         return studentService.studentRegister(student);
+    }
+
+    @PostMapping("/studentLogin")
+    public String studentLogin(@RequestBody Student student){
+        return studentService.verify(student);
     }
 
 }
