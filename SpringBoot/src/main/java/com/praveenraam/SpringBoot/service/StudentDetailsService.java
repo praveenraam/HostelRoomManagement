@@ -1,7 +1,10 @@
 package com.praveenraam.SpringBoot.service;
 
+import com.praveenraam.SpringBoot.model.Admin;
+import com.praveenraam.SpringBoot.model.AdminPrinciple;
 import com.praveenraam.SpringBoot.model.Student;
-import com.praveenraam.SpringBoot.model.UserPrinciple;
+import com.praveenraam.SpringBoot.model.StudentPrinciple;
+import com.praveenraam.SpringBoot.repository.AdminRepository;
 import com.praveenraam.SpringBoot.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,23 +12,27 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
-public class MyUserDetailsService implements UserDetailsService
+public class StudentDetailsService implements UserDetailsService
 {
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private AdminRepository adminRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         Student student = studentRepository.findByEmail(email);
+        Admin admin = adminRepository.findByEmail(email);
 
-        if(student == null){
-            System.out.println("User not found");
-            throw new UsernameNotFoundException("User not found");
+        if(student == null && admin == null){
+            System.out.println("Account not Found");
+            throw new UsernameNotFoundException("Account not Found");
         }
-        return new UserPrinciple(student);
+
+        if(admin != null) return new AdminPrinciple(admin);
+        return new StudentPrinciple(student);
     }
+
 }

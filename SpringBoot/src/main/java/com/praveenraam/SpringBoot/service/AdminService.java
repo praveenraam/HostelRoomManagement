@@ -1,7 +1,7 @@
 package com.praveenraam.SpringBoot.service;
 
-import com.praveenraam.SpringBoot.model.Student;
-import com.praveenraam.SpringBoot.repository.StudentRepository;
+import com.praveenraam.SpringBoot.model.Admin;
+import com.praveenraam.SpringBoot.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,29 +12,30 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class StudentService {
+public class AdminService {
+
     @Autowired
-    private StudentRepository studentRepository;
+    private AdminRepository adminRepository;
     @Autowired
     private AuthenticationManager authManager;
     @Autowired
     private JWTService jwtService;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
-    public List<Student> findAllStudents(){
-        return studentRepository.findAll();
+
+    public List<Admin> findAllAdmin(){
+        return adminRepository.findAll();
     }
 
-    public Student studentRegister(Student student){
-        student.setPassword(encoder.encode(student.getPassword()));
-        return studentRepository.save(student);
+    public Admin adminRegister(Admin admin){
+        admin.setPassword(encoder.encode(admin.getPassword()));
+        return adminRepository.save(admin);
     }
 
-    public String verify(Student student){
-        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(student.getEmail(),student.getPassword()));
+    public String verify(Admin admin){
+        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(admin.getEmail(),admin.getPassword()));
 
-        if(authentication.isAuthenticated()) return jwtService.generateToken(student.getEmail());
+        if(authentication.isAuthenticated()) return jwtService.generateToken(admin.getEmail());
         return "Not successful, check credentials";
     }
-
 }

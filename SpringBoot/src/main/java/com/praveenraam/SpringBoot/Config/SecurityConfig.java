@@ -34,13 +34,18 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
         http.csrf(customizer -> customizer.disable())
-            .authorizeHttpRequests(request -> request
-                    .requestMatchers("studentRegister","studentLogin")
-                    .permitAll()
-                    .anyRequest().authenticated())
-            .formLogin(Customizer.withDefaults()) // form in browser
-            .httpBasic(Customizer.withDefaults()) // for postman
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("studentRegister", "studentLogin", "adminLogin")
+                        .permitAll()
+                        .requestMatchers("/admin/**")
+                        .hasRole("Admin")
+                        .requestMatchers("/student/**")
+                        .hasRole("Student")
+                        .anyRequest().authenticated())
+
+                .formLogin(Customizer.withDefaults()) // form in browser
+                .httpBasic(Customizer.withDefaults()) // for postman
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

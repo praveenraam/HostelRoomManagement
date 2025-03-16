@@ -7,10 +7,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-public class UserPrinciple implements UserDetails {
+public class StudentPrinciple implements UserDetails {
 
     private Student student;
-    public UserPrinciple(Student student){
+    public StudentPrinciple(Student student){
         this.student = student;
     }
 
