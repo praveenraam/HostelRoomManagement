@@ -38,13 +38,13 @@ public class SecurityConfig {
                         .requestMatchers("studentRegister", "studentLogin", "adminLogin")
                         .permitAll()
                         .requestMatchers("/admin/**")
-                        .hasRole("Admin")
+                        .hasRole("ADMIN")
                         .requestMatchers("/student/**")
-                        .hasRole("Student")
+                        .hasRole("STUDENT")
                         .anyRequest().authenticated())
-
                 .formLogin(Customizer.withDefaults()) // form in browser
                 .httpBasic(Customizer.withDefaults()) // for postman
+                .logout(logout -> logout.logoutUrl("/logout").permitAll())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

@@ -11,9 +11,4 @@ public class HelloController {
     public String Hello(HttpServletRequest request){
         return "Hello SpringBoot!!"+request.getSession().getId();
     }
-
-    @GetMapping("/admin/google")
-    public String Greet(HttpServletRequest request){
-        return request.getSession().getId();
-    }
 }
