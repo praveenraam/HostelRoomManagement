@@ -19,32 +19,29 @@ public class RoomService {
     public List<Room> getAllRooms(){
         return roomRepository.findAll();
     }
-    public Optional<Room> getRoomById(Long id){
-        return roomRepository.findById(id);
+    public Room getRoomById(Long id){
+        return roomRepository.findById(id).get();
     }
 
     public Room updateRoom(Long id,Room updateRoom){
-        Optional<Room> room = this.getRoomById(id);
+        Room room = this.getRoomById(id);
 
-        if(room.isEmpty()) throw new RuntimeException("No room Found");
+        if(room == null) throw new RuntimeException("No room Found");
 
-        room.get().setRoomNo(updateRoom.getRoomNo());
-        room.get().setRoomType(updateRoom.getRoomType());
-        room.get().setTotalBeds(updateRoom.getTotalBeds());
-        room.get().setAvailableBeds(updateRoom.getAvailableBeds());
-        room.get().setHostel(updateRoom.getHostel());
+        room.setRoomNo(updateRoom.getRoomNo());
+        room.setRoomType(updateRoom.getRoomType());
+        room.setTotalBeds(updateRoom.getTotalBeds());
+        room.setAvailableBeds(updateRoom.getAvailableBeds());
+        room.setHostel(updateRoom.getHostel());
 
-        roomRepository.save(room.get());
-        return room.get();
+        roomRepository.save(room);
+        return room;
     }
 
-    public Room deleteRoom(Long id){
-        Optional<Room> room = this.getRoomById(id);
-
-        if(room.isEmpty()) throw new RuntimeException("No room found to delete");
-
+    public void deleteRoom(Long id){
+        Room room = this.getRoomById(id);
+        if(room == null) throw new RuntimeException("No room found to delete");
         roomRepository.deleteById(id);
-        return room.get();
     }
 
 }
