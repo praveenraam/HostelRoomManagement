@@ -4,6 +4,8 @@ import com.praveenraam.SpringBoot.model.Hostel;
 import com.praveenraam.SpringBoot.repository.HostelRepository;
 import com.praveenraam.SpringBoot.service.HostelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,30 +17,35 @@ public class HostelController {
     private HostelService hostelService;
 
     @GetMapping("/admin/getAllHostel")
-    public List<Hostel> getAllHostel(){
-        return hostelService.getAllHostel();
+    public ResponseEntity<List<Hostel>> getAllHostel(){
+        return new ResponseEntity<>(hostelService.getAllHostel(), HttpStatus.OK);
     }
 
     @GetMapping("/admin/hostel/{id}")
-    public Hostel getHostelById(@PathVariable Long id){
-        return hostelService.getHostelById(id);
+    public ResponseEntity<Hostel> getHostelById(@PathVariable Long id){
+        Hostel hostel = hostelService.getHostelById(id);
+        if(hostel == null) return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(hostel,HttpStatus.OK);
     }
 
     @PostMapping("/admin/createHostel")
-    public Hostel createHostel(@RequestBody Hostel hostel){
-        return hostelService.createHostel(hostel);
+    public ResponseEntity<Hostel> createHostel(@RequestBody Hostel hostel){
+        return new ResponseEntity<>(hostelService.createHostel(hostel),HttpStatus.CREATED);
     }
 
     @PostMapping("/admin/updateHostel/{id}")
-    public Hostel updateHostel(@RequestBody Hostel hostel, @PathVariable Long id){
-        return hostelService.updateHostel(id,hostel);
+    public ResponseEntity<Hostel> updateHostel(@RequestBody Hostel hostel, @PathVariable Long id){
+        if(hostelService.updateHostel(id,hostel)){
+            Hostel updatedHostel = hostelService.getHostelById(id);
+            return new ResponseEntity<>(updatedHostel,HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/admin/deleteHostel/{id}")
-    public Hostel deleteRoom(@PathVariable Long id){
-        return hostelService.deleteHostel(id);
+    public ResponseEntity<Boolean> deleteHostel(@PathVariable Long id){
+        if(hostelService.deleteHostel(id)) return new ResponseEntity<>(true,HttpStatus.OK);
+        return new ResponseEntity<>(false,HttpStatus.NO_CONTENT);
     }
-
-
 
 }

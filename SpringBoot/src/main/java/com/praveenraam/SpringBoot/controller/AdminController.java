@@ -3,6 +3,8 @@ package com.praveenraam.SpringBoot.controller;
 import com.praveenraam.SpringBoot.model.Admin;
 import com.praveenraam.SpringBoot.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,13 +19,15 @@ public class AdminController {
     private AdminService adminService;
 
     @GetMapping("/allAdmins")
-    public List<Admin> findAllAdmin(){
-        return adminService.findAllAdmin();
+    public ResponseEntity<List<Admin>> findAllAdmin(){
+        return new ResponseEntity<>(adminService.findAllAdmin(), HttpStatus.OK);
     }
 
     @PostMapping("/adminLogin")
-    public String adminLogin(@RequestBody Admin admin){
-        return adminService.verify(admin);
+    public ResponseEntity<String> adminLogin(@RequestBody Admin admin){
+        String token = adminService.verify(admin);
+        if(token.isEmpty()) return new ResponseEntity<>("Enter the correct credentials",HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(token,HttpStatus.OK);
     }
 
 }

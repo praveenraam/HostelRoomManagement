@@ -23,10 +23,10 @@ public class RoomService {
         return roomRepository.findById(id).get();
     }
 
-    public Room updateRoom(Long id,Room updateRoom){
+    public boolean updateRoom(Long id,Room updateRoom){
         Room room = this.getRoomById(id);
 
-        if(room == null) throw new RuntimeException("No room Found");
+        if(room == null) return false;
 
         room.setRoomNo(updateRoom.getRoomNo());
         room.setRoomType(updateRoom.getRoomType());
@@ -35,13 +35,15 @@ public class RoomService {
         room.setHostel(updateRoom.getHostel());
 
         roomRepository.save(room);
-        return room;
+        return true;
     }
 
-    public void deleteRoom(Long id){
+    public boolean deleteRoom(Long id){
         Room room = this.getRoomById(id);
-        if(room == null) throw new RuntimeException("No room found to delete");
+        if(room == null) return false;
         roomRepository.deleteById(id);
+
+        return true;
     }
 
 }

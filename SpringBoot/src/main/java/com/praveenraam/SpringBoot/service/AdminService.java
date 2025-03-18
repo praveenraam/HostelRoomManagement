@@ -36,6 +36,6 @@ public class AdminService {
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(admin.getEmail(),admin.getPassword()));
 
         if(authentication.isAuthenticated()) return jwtService.generateToken(admin.getEmail());
-        return "Not successful, check credentials";
+        return "";
     }
 }

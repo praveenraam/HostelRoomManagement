@@ -37,10 +37,10 @@ public class HostelService {
         return hostelRepository.save(hostel);
     }
 
-    public Hostel updateHostel(Long id, Hostel updatedHostel){
+    public boolean updateHostel(Long id, Hostel updatedHostel){
         Hostel currHostel = this.getHostelById(id);
 
-        if(currHostel == null) throw new RuntimeException("No hostel found");
+        if(currHostel == null) return false;
 
         currHostel.setName(updatedHostel.getName());
         currHostel.setOneCart(updatedHostel.getOneCart());
@@ -52,16 +52,17 @@ public class HostelService {
         currHostel.setNoOfFloors(updatedHostel.getNoOfFloors());
         currHostel.setTotalRooms(updatedHostel.getTotalRooms());
 
-        return hostelRepository.save(currHostel);
+        return true;
     }
 
     public List<Hostel> getAllHostel() {
         return hostelRepository.findAll();
     }
 
-    public void deleteHostel(Long id) {
+    public boolean deleteHostel(Long id) {
         Hostel hostel = this.getHostelById(id);
-        if(hostel == null) throw new RuntimeException("No hostel found");
+        if(hostel == null) return false;
         hostelRepository.deleteById(id);
+        return true;
     }
 }

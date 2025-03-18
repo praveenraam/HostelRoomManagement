@@ -2,7 +2,10 @@ package com.praveenraam.SpringBoot.controller;
 
 import com.praveenraam.SpringBoot.model.Room;
 import com.praveenraam.SpringBoot.service.RoomService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,28 +17,35 @@ public class RoomController {
     private RoomService roomService;
 
     @GetMapping("/admin/getAllRoom")
-    public List<Room> getAllRoom(){
-        return roomService.getAllRooms();
+    public ResponseEntity<List<Room>> getAllRoom(){
+        return new ResponseEntity<>(roomService.getAllRooms(), HttpStatus.OK);
     }
 
     @GetMapping("/admin/room/{id}")
-    public Room getRoomWithId(@PathVariable Long id){
-        return roomService.getRoomById(id);
+    public ResponseEntity<Room> getRoomWithId(@PathVariable Long id){
+        Room room = roomService.getRoomById(id);
+        if(room == null) return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(room,HttpStatus.OK);
     }
 
     @PostMapping("/admin/createRoom")
-    public Room roomCreate(@RequestBody Room room){
-        return roomService.createRoom(room);
+    public ResponseEntity<Room> roomCreate(@RequestBody Room room){
+        return new ResponseEntity<>(roomService.createRoom(room),HttpStatus.CREATED);
     }
 
     @PostMapping("/admin/updateRoom/{id}")
-    public Room roomUpdate(@PathVariable Long id,@RequestBody Room room){
-        return roomService.updateRoom(id,room);
+    public ResponseEntity<Room> roomUpdate(@PathVariable Long id,@RequestBody Room room){
+        if(roomService.updateRoom(id,room)){
+            Room updatedRoom = roomService.getRoomById(id);
+            return new ResponseEntity<>(updatedRoom,HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/admin/deleteRoom")
-    public void deleteRoom(@RequestBody Long id){
-        roomService.deleteRoom(id);
+    @DeleteMapping("/admin/deleteRoom/{id}")
+    public ResponseEntity<Boolean> deleteRoom(@PathVariable Long id){
+        if(roomService.deleteRoom(id)) return new ResponseEntity<>(true,HttpStatus.OK);
+        return new ResponseEntity<>(false,HttpStatus.NO_CONTENT);
     }
 
 }
