@@ -41,6 +41,8 @@ public class Hostel {
         this.threeCart = threeCart;
         this.fourCart = fourCart;
         this.fiveCart = fiveCart;
+
+        this.totalVacancy = (oneCart)+(twoCart*2)+(threeCart*3)+(fourCart*4)+(fiveCart*5);
     }
 
     public Long getId() {
@@ -80,6 +82,9 @@ public class Hostel {
     }
 
     public void setOneCart(int oneCart) {
+        totalVacancy-= this.oneCart;
+        totalVacancy+=oneCart;
+
         this.oneCart = oneCart;
     }
 
@@ -88,6 +93,9 @@ public class Hostel {
     }
 
     public void setTwoCart(int twoCart) {
+        totalVacancy-= this.twoCart*2;
+        totalVacancy+=twoCart*2;
+
         this.twoCart = twoCart;
     }
 
@@ -96,6 +104,9 @@ public class Hostel {
     }
 
     public void setThreeCart(int threeCart) {
+        totalVacancy-= this.threeCart*3;
+        totalVacancy+= threeCart*3;
+
         this.threeCart = threeCart;
     }
 
@@ -104,10 +115,16 @@ public class Hostel {
     }
 
     public void setFourCart(int fourCart) {
+        totalVacancy-= this.fourCart*4;
+        totalVacancy+= fourCart*4;
+
         this.fourCart = fourCart;
     }
 
     public int getFiveCart() {
+        totalVacancy-= this.fiveCart*5;
+        totalVacancy+= fiveCart*5;
+
         return fiveCart;
     }
 

@@ -30,7 +30,6 @@ public class StudentController {
 
     @PostMapping("/studentLogin")
     public ResponseEntity<String> studentLogin(@RequestBody Student student){
-
         String token = studentService.verify(student);
 
         if(token.isEmpty()) return new ResponseEntity<>("Enter the correct credentials",HttpStatus.UNAUTHORIZED);
