@@ -74,10 +74,9 @@ public class RoomAllocationService {
         if(room == null) return "Room not found";
 
         Student student = studentRepository.findById(studentId).orElse(null);
-//        if(student == null) return "Student not found";
 
         Optional<RoomStudent> existingRoomStudent = roomStudentRepository.findByStudentId(studentId);
-        if(existingRoomStudent.isPresent()) return updateCUrrRoom(existingRoomStudent.get(),room);
+        if(existingRoomStudent.isPresent()) return updateCurrRoom(existingRoomStudent.get(),room);
 
         roomStudentRepository.save(roomStudent);
 
@@ -88,7 +87,7 @@ public class RoomAllocationService {
         return "Room booked successfully";
     }
 
-    public String updateCUrrRoom(RoomStudent roomStudent,Room newRoom){
+    public String updateCurrRoom(RoomStudent roomStudent,Room newRoom){
 
         Room oldRoom = roomStudent.getRoom();
 
@@ -118,7 +117,6 @@ public class RoomAllocationService {
         roomRepository.save(room);
 
         roomStudentRepository.delete(roomStudent);
-
         return "Successfully removed";
     }
 
