@@ -9,6 +9,7 @@ import com.praveenraam.SpringBoot.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,9 +50,9 @@ public class RoomAllocationService {
             return "No vacancy in room";
         }
 
-        Optional<RoomStudent> excistingRoomStudent = roomStudentRepository.findByStudentId(studentId);
+        Optional<RoomStudent> existingRoomStudent = roomStudentRepository.findByStudentId(studentId);
 
-        if(excistingRoomStudent.isPresent()) this.deleteCurrRoom(studentId);
+        if(existingRoomStudent.isPresent()) this.deleteCurrRoom(studentId);
 
         Student student = studentRepository.findById(studentId).orElse(null);
         RoomStudent roomStudent = new RoomStudent(room,student);
@@ -62,6 +63,48 @@ public class RoomAllocationService {
         roomRepository.save(room);
 
         return "Room booked successfully";
+    }
+
+    public String bookRoom(RoomStudent roomStudent){
+
+        Long roomId = roomStudent.getRoom().getId();
+        Long studentId = roomStudent.getStudent().getId();
+
+        Room room = roomRepository.findById(roomId).orElse(null);
+        if(room == null) return "Room not found";
+
+        Student student = studentRepository.findById(studentId).orElse(null);
+//        if(student == null) return "Student not found";
+
+        Optional<RoomStudent> existingRoomStudent = roomStudentRepository.findByStudentId(studentId);
+        if(existingRoomStudent.isPresent()) return updateCUrrRoom(existingRoomStudent.get(),room);
+
+        roomStudentRepository.save(roomStudent);
+
+        roomStudent.setAssignedDate(LocalDate.now());
+        room.setAvailableBeds(room.getAvailableBeds()-1);
+        roomRepository.save(room);
+
+        return "Room booked successfully";
+    }
+
+    public String updateCUrrRoom(RoomStudent roomStudent,Room newRoom){
+
+        Room oldRoom = roomStudent.getRoom();
+
+        roomStudent.setRoom(newRoom);
+        roomStudent.setAssignedDate(LocalDate.now());
+        roomStudentRepository.save(roomStudent);
+
+        if(oldRoom != null){
+            oldRoom.setAvailableBeds(oldRoom.getAvailableBeds()+1);
+            roomRepository.save(oldRoom);
+        }
+
+        newRoom.setAvailableBeds(newRoom.getAvailableBeds()-1);
+        roomRepository.save(newRoom);
+
+        return "Room Changed Successfully";
     }
 
     public String deleteCurrRoom(Long studentId){

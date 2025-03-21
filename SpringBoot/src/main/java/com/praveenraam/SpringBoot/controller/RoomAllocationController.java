@@ -2,6 +2,7 @@ package com.praveenraam.SpringBoot.controller;
 
 import com.praveenraam.SpringBoot.model.Hostel;
 import com.praveenraam.SpringBoot.model.Room;
+import com.praveenraam.SpringBoot.model.RoomStudent;
 import com.praveenraam.SpringBoot.service.HostelService;
 import com.praveenraam.SpringBoot.service.RoomAllocationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,11 @@ public class RoomAllocationController {
         return new ResponseEntity<>(listOfRooms,HttpStatus.OK);
     }
 
+    @PostMapping("/student/hostels/{hostelId}/availableRooms/book")
+    public ResponseEntity<String> bookRoom(@RequestBody RoomStudent roomStudent){
+        String message = roomAllocationService.bookRoom(roomStudent);
+        return ResponseEntity.ok(message);
+    }
 
 
 }
