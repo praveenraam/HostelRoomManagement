@@ -1,5 +1,6 @@
 package com.praveenraam.SpringBoot.service;
 
+import com.praveenraam.SpringBoot.model.Hostel;
 import com.praveenraam.SpringBoot.model.Room;
 import com.praveenraam.SpringBoot.model.RoomStudent;
 import com.praveenraam.SpringBoot.model.Student;
@@ -24,9 +25,13 @@ public class RoomAllocationService {
     @Autowired
     private RoomStudentRepository roomStudentRepository;
 
+    @Autowired
+    private HostelService hostelService;
+
 
     public List<Room> getAllVacantRooms(Long hostelId) {
         List<Room> listOfRooms = roomRepository.findAll();
+
         List<Room> listOfRoomInHostel = listOfRooms.stream().filter(
                 room -> room.getHostel().getId().equals(hostelId)
         ).toList();
@@ -84,6 +89,9 @@ public class RoomAllocationService {
         room.setAvailableBeds(room.getAvailableBeds()-1);
         roomRepository.save(room);
 
+        Hostel hostel = room.getHostel();
+        hostelService.occupiedRoomInHostel(hostel.getId(),1);
+
         return "Room booked successfully";
     }
 
@@ -98,10 +106,16 @@ public class RoomAllocationService {
         if(oldRoom != null){
             oldRoom.setAvailableBeds(oldRoom.getAvailableBeds()+1);
             roomRepository.save(oldRoom);
+
+            Hostel hostel = oldRoom.getHostel();
+            hostelService.freeRoomInHostel(hostel.getId(),1);
         }
 
         newRoom.setAvailableBeds(newRoom.getAvailableBeds()-1);
         roomRepository.save(newRoom);
+
+        Hostel hostel = newRoom.getHostel();
+        hostelService.occupiedRoomInHostel(hostel.getId(),1);
 
         return "Room Changed Successfully";
     }
