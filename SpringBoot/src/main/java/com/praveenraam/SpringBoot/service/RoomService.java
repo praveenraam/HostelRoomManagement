@@ -12,6 +12,8 @@ import java.util.Optional;
 public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private RoomAllocationService roomAllocationService;
 
     public Room createRoom(Room room){
         return roomRepository.save(room);
@@ -21,6 +23,11 @@ public class RoomService {
     }
     public Room getRoomById(Long id){
         return roomRepository.findById(id).get();
+    }
+    public List<Room> getAllRoomsInHostel(Long hostelId){
+        return roomRepository.findAll().stream().filter(
+                room -> room.getHostel().getId().equals(hostelId)
+        ).toList();
     }
 
     public boolean updateRoom(Long id,Room updateRoom){
@@ -41,6 +48,8 @@ public class RoomService {
     public boolean deleteRoom(Long id){
         Room room = this.getRoomById(id);
         if(room == null) return false;
+
+        roomAllocationService.deleteStudentFromRoom(id);
         roomRepository.deleteById(id);
 
         return true;

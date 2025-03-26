@@ -4,6 +4,7 @@ import com.praveenraam.SpringBoot.model.Hostel;
 import com.praveenraam.SpringBoot.model.Room;
 import com.praveenraam.SpringBoot.model.RoomStudent;
 import com.praveenraam.SpringBoot.model.Student;
+import com.praveenraam.SpringBoot.repository.HostelRepository;
 import com.praveenraam.SpringBoot.repository.RoomRepository;
 import com.praveenraam.SpringBoot.repository.RoomStudentRepository;
 import com.praveenraam.SpringBoot.repository.StudentRepository;
@@ -26,7 +27,7 @@ public class RoomAllocationService {
     private RoomStudentRepository roomStudentRepository;
 
     @Autowired
-    private HostelService hostelService;
+    private HostelRepository hostelRepository;
 
 
     public List<Room> getAllVacantRooms(Long hostelId) {
@@ -57,7 +58,7 @@ public class RoomAllocationService {
 
         Optional<RoomStudent> existingRoomStudent = roomStudentRepository.findByStudentId(studentId);
 
-        if(existingRoomStudent.isPresent()) this.deleteCurrRoom(studentId);
+        if(existingRoomStudent.isPresent()) this.deleteStudentCurrentRoom(studentId);
 
         Student student = studentRepository.findById(studentId).orElse(null);
         RoomStudent roomStudent = new RoomStudent(room,student);
@@ -90,7 +91,8 @@ public class RoomAllocationService {
         roomRepository.save(room);
 
         Hostel hostel = room.getHostel();
-        hostelService.occupiedRoomInHostel(hostel.getId(),1);
+        hostel.setTotalVacancy(hostel.getTotalVacancy()-1);
+        hostelRepository.save(hostel);
 
         return "Room booked successfully";
     }
@@ -108,22 +110,23 @@ public class RoomAllocationService {
             roomRepository.save(oldRoom);
 
             Hostel hostel = oldRoom.getHostel();
-            hostelService.freeRoomInHostel(hostel.getId(),1);
+            hostel.setTotalVacancy(hostel.getTotalVacancy()+1);
+            hostelRepository.save(hostel);
         }
 
         newRoom.setAvailableBeds(newRoom.getAvailableBeds()-1);
         roomRepository.save(newRoom);
 
         Hostel hostel = newRoom.getHostel();
-        hostelService.occupiedRoomInHostel(hostel.getId(),1);
+        hostel.setTotalVacancy(hostel.getTotalVacancy()-1);
+        hostelRepository.save(hostel);
 
         return "Room Changed Successfully";
     }
 
-    public String deleteCurrRoom(Long studentId){
+    public String deleteStudentCurrentRoom(Long studentId){
 
         RoomStudent roomStudent = roomStudentRepository.findByStudentId(studentId).orElse(null);
-
         if(roomStudent == null) return "Student current not in any rooms";
 
         Room room = roomStudent.getRoom();
@@ -131,6 +134,17 @@ public class RoomAllocationService {
         roomRepository.save(room);
 
         roomStudentRepository.delete(roomStudent);
+        return "Successfully removed";
+    }
+
+    public String deleteStudentFromRoom(Long roomId){
+
+        List<RoomStudent> listOfRoomStudent = roomStudentRepository.findByRoomId(roomId);
+
+        for(RoomStudent roomStudent : listOfRoomStudent){
+            deleteStudentCurrentRoom(roomStudent.getStudent().getId());
+        }
+
         return "Successfully removed";
     }
 

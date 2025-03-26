@@ -41,7 +41,7 @@ public class RoomAllocationController {
 
     @DeleteMapping("/student/removeRoom/{studentId}")
     public ResponseEntity<String> removeRoom(@PathVariable Long studentId){
-        return new ResponseEntity<>(roomAllocationService.deleteCurrRoom(studentId),HttpStatus.OK);
+        return new ResponseEntity<>(roomAllocationService.deleteStudentCurrentRoom(studentId),HttpStatus.OK);
     }
 
 }

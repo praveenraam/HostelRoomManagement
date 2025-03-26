@@ -1,6 +1,7 @@
 package com.praveenraam.SpringBoot.service;
 
 import com.praveenraam.SpringBoot.model.Hostel;
+import com.praveenraam.SpringBoot.model.Room;
 import com.praveenraam.SpringBoot.repository.HostelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,9 @@ import java.util.Optional;
 public class HostelService {
     @Autowired
     private HostelRepository hostelRepository;
+
+    @Autowired
+    private RoomService roomService;
 
     public void occupiedRoomInHostel(Long hostelId, int bedCount){
         Optional<Hostel> hostel = hostelRepository.findById(hostelId);
@@ -62,6 +66,13 @@ public class HostelService {
     public boolean deleteHostel(Long id) {
         Hostel hostel = this.getHostelById(id);
         if(hostel == null) return false;
+
+        List<Room> listOfRooms = roomService.getAllRoomsInHostel(id);
+
+        for(Room room : listOfRooms){
+            roomService.deleteRoom(room.getId());
+        }
+
         hostelRepository.deleteById(id);
         return true;
     }

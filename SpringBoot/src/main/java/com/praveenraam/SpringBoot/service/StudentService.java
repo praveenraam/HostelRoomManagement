@@ -25,6 +25,10 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
+    public Student findStudentById(Long id){
+        return studentRepository.findById(id).orElse(null);
+    }
+
     public Student studentRegister(Student student){
         student.setPassword(encoder.encode(student.getPassword()));
         return studentRepository.save(student);
