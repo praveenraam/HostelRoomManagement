@@ -17,22 +17,6 @@ public class HostelService {
     @Autowired
     private RoomService roomService;
 
-    public void occupiedRoomInHostel(Long hostelId, int bedCount){
-        Optional<Hostel> hostel = hostelRepository.findById(hostelId);
-        if(hostel.isPresent()) {
-            hostel.get().decreaseVacancy(bedCount);
-            hostelRepository.save(hostel.get());
-        }
-    }
-
-    public void freeRoomInHostel(Long hostelId, int bedCount){
-        Optional<Hostel> hostel = hostelRepository.findById(hostelId);
-        if(hostel.isPresent()){
-            hostel.get().increaseVacancy(bedCount);
-            hostelRepository.save(hostel.get());
-        }
-    }
-
     public Hostel getHostelById(Long id){
         return hostelRepository.findById(id).get();
     }
@@ -49,7 +33,6 @@ public class HostelService {
         currHostel.setName(updatedHostel.getName());
         currHostel.setOneCart(updatedHostel.getOneCart());
         currHostel.setTwoCart(updatedHostel.getTwoCart());
-        currHostel.setThreeCart(updatedHostel.getThreeCart());
         currHostel.setFourCart(updatedHostel.getFourCart());
         currHostel.setFiveCart(updatedHostel.getFiveCart());
         currHostel.setTotalVacancy(updatedHostel.getTotalVacancy());

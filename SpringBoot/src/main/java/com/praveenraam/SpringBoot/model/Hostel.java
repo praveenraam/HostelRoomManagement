@@ -21,8 +21,6 @@ public class Hostel {
     @Column(nullable = false)
     private int twoCart;
     @Column(nullable = false)
-    private int threeCart;
-    @Column(nullable = false)
     private int fourCart;
     @Column(nullable = false)
     private int fiveCart;
@@ -35,14 +33,6 @@ public class Hostel {
         this.id = id;
         this.name = name;
         this.noOfFloors = noOfFloors;
-        this.totalRooms = totalRooms;
-        this.oneCart = oneCart;
-        this.twoCart = twoCart;
-        this.threeCart = threeCart;
-        this.fourCart = fourCart;
-        this.fiveCart = fiveCart;
-
-        this.totalVacancy = (oneCart)+(twoCart*2)+(threeCart*3)+(fourCart*4)+(fiveCart*5);
     }
 
     public Long getId() {
@@ -99,17 +89,6 @@ public class Hostel {
         this.twoCart = twoCart;
     }
 
-    public int getThreeCart() {
-        return threeCart;
-    }
-
-    public void setThreeCart(int threeCart) {
-        totalVacancy-= this.threeCart*3;
-        totalVacancy+= threeCart*3;
-
-        this.threeCart = threeCart;
-    }
-
     public int getFourCart() {
         return fourCart;
     }
@@ -138,15 +117,6 @@ public class Hostel {
 
     public void setTotalVacancy(int totalVacancy) {
         this.totalVacancy = totalVacancy;
-    }
-
-    public void decreaseVacancy(int beds){
-        if (totalVacancy >= beds) {
-            totalVacancy -= beds;
-        }
-    }
-    public void increaseVacancy(int beds){
-        this.totalVacancy+=beds;
     }
 
 }
