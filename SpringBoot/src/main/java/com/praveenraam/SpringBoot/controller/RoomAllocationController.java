@@ -25,7 +25,7 @@ public class RoomAllocationController {
         return new ResponseEntity<>(hostelService.getAllHostel(), HttpStatus.OK);
     }
 
-    @GetMapping("/student/hostels/{hostelId}/availableRooms")
+    @GetMapping({"/student/hostels/{hostelId}/availableRooms","/admin/hostels/{hostelId}/availableRooms"})
     public ResponseEntity<List<Room>> getAllVacantRooms(@PathVariable Long hostelId){
         List<Room> listOfRooms = roomAllocationService.getAllVacantRooms(hostelId);
 
@@ -33,15 +33,14 @@ public class RoomAllocationController {
         return new ResponseEntity<>(listOfRooms,HttpStatus.OK);
     }
 
-    @PostMapping("/student/hostels/{hostelId}/availableRooms/book")
+    @PostMapping({"/student/hostels/{hostelId}/availableRooms/book","/admin/studentRoomChange/hostel/{hostelId}/availableRoom/book"})
     public ResponseEntity<String> bookRoom(@RequestBody RoomStudent roomStudent){
         String message = roomAllocationService.bookRoom(roomStudent);
         return ResponseEntity.ok(message);
     }
 
-    @DeleteMapping("/student/removeRoom/{studentId}")
+    @DeleteMapping({"/student/removeRoom/{studentId}","/admin/removeRoom/{studentId}"})
     public ResponseEntity<String> removeRoom(@PathVariable Long studentId){
         return new ResponseEntity<>(roomAllocationService.deleteStudentCurrentRoom(studentId),HttpStatus.OK);
     }
-
 }
