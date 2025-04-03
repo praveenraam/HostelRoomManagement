@@ -25,6 +25,16 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
+    public List<Student> findStudentsWithRoom(){
+        List<Student> allStdWithRoom = studentRepository.findStudentsWithRoom();
+        return allStdWithRoom;
+    }
+
+    public List<Student> findAllStudentsWithoutRoom(){
+        List<Student> allStdWithoutRoom = studentRepository.findStudentsWithoutRoom();
+        return  allStdWithoutRoom;
+    }
+
     public Student findStudentById(Long id){
         return studentRepository.findById(id).orElse(null);
     }
