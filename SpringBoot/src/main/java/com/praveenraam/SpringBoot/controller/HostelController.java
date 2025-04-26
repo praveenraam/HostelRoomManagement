@@ -1,14 +1,16 @@
 package com.praveenraam.SpringBoot.controller;
 
 import com.praveenraam.SpringBoot.model.Hostel;
-import com.praveenraam.SpringBoot.repository.HostelRepository;
 import com.praveenraam.SpringBoot.service.HostelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 public class HostelController {
@@ -17,9 +19,19 @@ public class HostelController {
     private HostelService hostelService;
 
     @GetMapping("/admin/getAllHostel")
-    public ResponseEntity<List<Hostel>> getAllHostel(){
+    public ResponseEntity<List<Hostel>> getAllHostel() {
         return new ResponseEntity<>(hostelService.getAllHostel(), HttpStatus.OK);
     }
+
+    @GetMapping("/admin/getPaginatedHostel")
+    public Page<Hostel> getPaginated(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        Pageable pageable = PageRequest.of(page,size);
+        return hostelService.getPaginated(pageable);
+    }
+
 
     @GetMapping("/admin/hostel/{id}")
     public ResponseEntity<Hostel> getHostelById(@PathVariable Long id){

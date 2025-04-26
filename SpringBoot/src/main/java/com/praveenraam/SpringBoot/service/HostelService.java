@@ -4,10 +4,11 @@ import com.praveenraam.SpringBoot.model.Hostel;
 import com.praveenraam.SpringBoot.model.Room;
 import com.praveenraam.SpringBoot.repository.HostelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class HostelService {
@@ -58,5 +59,9 @@ public class HostelService {
 
         hostelRepository.deleteById(id);
         return true;
+    }
+
+    public Page<Hostel> getPaginated(Pageable pageable) {
+        return hostelRepository.findAll(pageable);
     }
 }
