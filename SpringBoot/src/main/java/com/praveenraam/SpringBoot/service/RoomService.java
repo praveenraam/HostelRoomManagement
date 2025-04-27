@@ -6,6 +6,8 @@ import com.praveenraam.SpringBoot.model.RoomType;
 import com.praveenraam.SpringBoot.repository.HostelRepository;
 import com.praveenraam.SpringBoot.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -97,4 +99,7 @@ public class RoomService {
         return true;
     }
 
+    public Page<Room> getAllRoomPaginated(Pageable pageable){
+        return roomRepository.findAll(pageable);
+    }
 }

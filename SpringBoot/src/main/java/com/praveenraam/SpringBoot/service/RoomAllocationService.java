@@ -9,6 +9,9 @@ import com.praveenraam.SpringBoot.repository.RoomRepository;
 import com.praveenraam.SpringBoot.repository.RoomStudentRepository;
 import com.praveenraam.SpringBoot.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -148,4 +151,27 @@ public class RoomAllocationService {
         return "Successfully removed";
     }
 
+    public Page<Room> getRoomPaginated(Long hostelId, Pageable pageable) {
+
+        List<Room> vacantRoomList = roomRepository.findAll().stream()
+                .filter(room -> room.getHostel().getId().equals(hostelId))
+                .filter(room -> room.getAvailableBeds() > 0)
+                .toList();
+
+        int pageSize = pageable.getPageSize();
+        int currPage = pageable.getPageNumber();
+
+        int startItem = pageSize*currPage;
+
+        List<Room> forPaginated;
+        if(vacantRoomList.size() < startItem){
+            forPaginated = List.of();
+        }
+        else{
+            int toItem = Math.min(startItem+pageSize,vacantRoomList.size());
+            forPaginated = vacantRoomList.subList(startItem,toItem);
+        }
+
+        return new PageImpl<>(forPaginated,pageable,vacantRoomList.size());
+    }
 }

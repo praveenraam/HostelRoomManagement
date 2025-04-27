@@ -4,6 +4,9 @@ import com.praveenraam.SpringBoot.model.Room;
 import com.praveenraam.SpringBoot.service.RoomService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,18 @@ public class RoomController {
     @GetMapping("/admin/getAllRoom")
     public ResponseEntity<List<Room>> getAllRoom(){
         return new ResponseEntity<>(roomService.getAllRooms(), HttpStatus.OK);
+    }
+
+    @GetMapping("/admin/getAllRoomPaginated")
+    public ResponseEntity<Page<Room>> getAllRoomPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Room> rooms = roomService.getAllRoomPaginated(pageable);
+
+        if(rooms.isEmpty()) return new ResponseEntity<>(rooms,HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(rooms,HttpStatus.OK);
     }
 
     @GetMapping("/admin/room/{id}")

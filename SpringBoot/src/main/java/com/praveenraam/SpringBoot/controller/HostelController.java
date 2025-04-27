@@ -23,13 +23,16 @@ public class HostelController {
         return new ResponseEntity<>(hostelService.getAllHostel(), HttpStatus.OK);
     }
 
-    @GetMapping("/admin/getPaginatedHostel")
-    public Page<Hostel> getPaginated(
+    @GetMapping({"/admin/getPaginatedHostel","/student/getPaginatedHostel"})
+    public ResponseEntity<Page<Hostel>> getPaginated(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ){
         Pageable pageable = PageRequest.of(page,size);
-        return hostelService.getPaginated(pageable);
+        Page<Hostel> hostel = hostelService.getPaginated(pageable);
+
+        if(hostel.isEmpty()) return new ResponseEntity<>(hostel,HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(hostel,HttpStatus.OK);
     }
 
 
