@@ -19,14 +19,7 @@ import java.util.List;
 public class RoomAllocationController {
 
     @Autowired
-    private HostelService hostelService;
-    @Autowired
     private RoomAllocationService roomAllocationService;
-
-    @GetMapping("/student/hostels")
-    public ResponseEntity<List<Hostel>> getAllHostels(){
-        return new ResponseEntity<>(hostelService.getAllHostel(), HttpStatus.OK);
-    }
 
     @GetMapping({"/student/hostels/{hostelId}/availableRooms","/admin/hostels/{hostelId}/availableRooms"})
     public ResponseEntity<List<Room>> getAllVacantRooms(@PathVariable Long hostelId){

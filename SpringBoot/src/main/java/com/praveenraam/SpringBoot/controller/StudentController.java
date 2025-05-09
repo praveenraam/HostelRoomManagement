@@ -66,13 +66,8 @@ public class StudentController {
         return new ResponseEntity<>(students,HttpStatus.OK);
     }
 
-    @GetMapping("/admin/student/{id}")
+    @GetMapping({"/admin/student/{id}","/student/profile/{id}"})
     public ResponseEntity<Student> findStudentWithId(@PathVariable Long id){
-        return new ResponseEntity<>(studentService.findStudentById(id),HttpStatus.OK);
-    }
-
-    @GetMapping("/student/profile")
-    public ResponseEntity<Student> findStudent(@RequestBody Long id){
         return new ResponseEntity<>(studentService.findStudentById(id),HttpStatus.OK);
     }
 

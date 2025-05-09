@@ -18,7 +18,7 @@ public class HostelController {
     @Autowired
     private HostelService hostelService;
 
-    @GetMapping("/admin/getAllHostel")
+    @GetMapping({"/admin/getAllHostel","/student/hostels"})
     public ResponseEntity<List<Hostel>> getAllHostel() {
         return new ResponseEntity<>(hostelService.getAllHostel(), HttpStatus.OK);
     }
